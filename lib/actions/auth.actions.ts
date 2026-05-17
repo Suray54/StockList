@@ -8,16 +8,21 @@ export const signUpWithEmail = async ({ email, password, fullName, country, inve
     try {
         const response = await auth.api.signUpEmail({ body: { email, password, name: fullName } })
 
-        if(response) {
-            await inngest.send({
-                name: 'app/user.created',
-                data: { email, name: fullName, country, investmentGoals, riskTolerance, preferredIndustry }
-            })
+        if (response) {
+            try {
+                await inngest.send({
+                    name: 'app/user.created',
+                    data: { email, name: fullName, country, investmentGoals, riskTolerance, preferredIndustry },
+                });
+            } catch (inngestError) {
+                // Account was created — don't fail sign-up if the background job couldn't be queued
+                console.error('Inngest event failed (welcome email may not send):', inngestError);
+            }
         }
 
         return { success: true, data: response }
     } catch (e) {
-        console.log('Sign up failed', e)
+        console.error('Sign up failed', e)
         return { success: false, error: 'Sign up failed' }
     }
 }
