@@ -125,7 +125,7 @@ npm install
 Create a new file named `.env` in the root of your project and add the following content:
 
 ```env
-NODE_ENV='development'
+# Local only — do NOT set NODE_ENV in Netlify/Vercel (the platform sets production automatically)
 NEXT_PUBLIC_BASE_URL=http://localhost:3000
 
 # FINNHUB (use FINNHUB_API_KEY for server-only, or NEXT_PUBLIC_FINNHUB_API_KEY)
